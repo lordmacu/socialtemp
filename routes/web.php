@@ -25,6 +25,7 @@ Route::post('/profile/{id}/edit', 'ProfileController@udpateProfile')->name('upda
 Route::get('/paginateWallProfile/{id}', 'ProfileController@paginateWallProfile')->name('paginateWallProfile');
 
 Route::get('/searchUser/', 'CompanyController@searchUser')->name('searchUser');
+Route::get('/searchnew/', 'SearchController@searchnew')->name('searchnew');
 
  
  Route::get('/PopulatePost/', 'HomeController@PopulatePost')->name('PopulatePost');
@@ -36,6 +37,7 @@ Route::get('/PostToWall/', 'HomeController@PostToWall');
 Route::get('/publicateVideos/', 'HomeController@publicateVideos');
 Route::get('/getRemoteEmpty/', 'HomeController@getRemoteEmpty');
 Route::get('/getRemoteEmptyById/', 'HomeController@getRemoteEmptyById');
+Route::get('/getRemoteEmptyByIdMe/', 'HomeController@getRemoteEmptyByIdMe');
 
  
 

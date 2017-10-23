@@ -16,5 +16,9 @@ class SearchController extends Controller {
                  ->with("users",$userFields->search($request->get("q")));
    } 
 
+   public function searchnew(){
+              return view('searchnew');
+    
+   }
     
 }

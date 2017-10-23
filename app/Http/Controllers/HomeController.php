@@ -622,6 +622,230 @@ startTime()
 
     }
     
+        public function convertIndividualMe($value){
+       
+        ini_set('max_execution_time', 300);
+        
+        set_time_limit(0);
+
+     ob_start();
+    
+        $cont=0;
+       
+        echo "<p>convirtiendo </p>";
+
+            file_put_contents('/var/www/html/social/public/videos/videos.json', json_encode([]));
+            $idPropiedad=$value["unit_id"];
+            $value["link"]="https://alquilerdirecto.com.ar/"."propiedad/".$idPropiedad."/".$value["slug"];
+            $name=explode("/", $value["link"])[4];      
+                 
+           
+             $jpg_image = imagecreatefromjpeg('/var/www/html/social/public/back.jpg');
+            $white = imagecolorallocate($jpg_image, 255, 255, 255);
+            $font_path = '/var/www/html/social/public/open.ttf';
+ 
+             imagettftext($jpg_image, 55, 0, 55, 300, $white, $font_path, wordwrap($value["title"], 35, "\n"));
+
+            imagejpeg($jpg_image,"/var/www/html/social/public/backd.jpg");
+            imagedestroy($jpg_image);
+            
+            $array[$cont]["title"] = $this->softTrim($value["title"],65);
+            $array[$cont]["id"] = $name;
+            $array[$cont]["link"] = $value["link"];
+            $descriptionText="";
+            if(isset($value["title"])){
+                $descriptionText.=$value["title"]." ";
+            }
+  
+            if(isset($value["street_name"])){
+             $descriptionText.=$value["street_name"]." ";
+            }
+            if(isset($value["street_number"])){
+             $descriptionText.=$value["street_number"]." ";
+            }
+            
+     
+      
+        
+            $array[$cont]["description"] = $descriptionText."\n".$value["link"]."\nhttps://www.facebook.com/groups/1479144712175761/\n Encuentra más propiedades en nuestro grupo de facebook\nDescarga el app https://play.google.com/store/apps/details?id=co.cristiangarcia.dueodirecto&hl=es" ;
+            $images = array();
+            $textImages = "";
+            $textImages .= "file '/var/www/html/social/public/backd.jpg'\nduration 2\n";
+ 
+            $contadorImagenes=0;
+            
+            
+             if(isset($value["images"])){
+               $imagesd=array();
+             
+           
+            foreach ($value["images"] as $enclo) {
+                if(isset($enclo["medium"])){
+                     copy(str_replace("-O","-F",$enclo["medium"]), "videos".parse_url(str_replace("-O","-F",$enclo["medium"]))["path"]);
+                    $images[]="videos".parse_url(str_replace("-O","-F",$enclo["medium"]))["path"];
+                 } 
+            }
+              
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }   
+            
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }   
+            
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            
+     foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }   
+            
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            
+      foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }   
+            
+            foreach ($images as $enclo) {
+                    $textImages .= "file '/var/www/html/social/public/" . $enclo . "'\nduration 8\n";
+            }  
+            
+        
+                   
+            
+             }else{
+                                     file_put_contents('/var/www/html/social/public/videos/videos.json', json_encode([]));
+ echo "error";
+                 exit();
+             }
+             
+            $textImages .= "file '/var/www/html/social/public/fin.jpg'\nduration 8\n";
+            $textImages .= "file '/var/www/html/social/public/fin.jpg'\nduration 8\n";
+            $textImages .= "file '/var/www/html/social/public/fin.jpg'\nduration 8\n";
+            $textImages .= "file '/var/www/html/social/public/fin.jpg'\nduration 8\n";
+ 
+            $array[$cont]["images"] = $images;
+            $array[$cont]["tags"] = "dueño directo, propiedades, alquiler, renta, solo dueños, dueño alquiler, dueño alquila, argentina, buenos aires";
+
+             file_put_contents('/var/www/html/social/text.txt', $textImages);
+
+            $namefile='output_'.$name.'.mp4';
+             $array[$cont]["video"] = "/var/www/html/social/public/videos/".$namefile;
+                               $process = new Process('ffmpeg -f concat -safe 0 -xerror  -analyzeduration 100M -probesize 100000M -i  /var/www/html/social/text.txt -vsync vfr -pix_fmt yuv420p videos/'.$namefile);
+$process->setTimeout(9600);
+ 
+
+
+
+             try {
+            $process->mustRun();
+            
+            $i = 0;
+while ($i++ < 100) {
+    echo "d".$i;
+}
+            
+     
+ while ($process->isRunning()) {
+      $currprogress = $process->getIncrementalOutput();
+       echo $currprogress;
+} 
+                        if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            } 
+       
+            echo $process->getOutput();
+            } catch (ProcessFailedException $e) {
+                echo $e->getMessage();
+               // $resulterro=file_get_contents("http://alquilerdirecto.com.ar/novideoProcess?id=".$value["unit_id"]);
+                echo "dd ".$resulterro;
+                             unlink("/var/www/html/social/public/videos/".$namefile);
+
+             }
+            
+
+
+             
+
+         
+               file_put_contents('/var/www/html/social/public/videos/videos.json', json_encode($array));
+ 
+    }
+    
+        
+    public function getRemoteEmptyByIdMe(Request $request){
+   
+        ini_set("max_execution_time", "1000");
+
+// make sure apache does not gzip this type, else it would get buffered
+//header('Content-Type: text/event-stream');
+// recommended to prevent caching of event data.
+header('Cache-Control: no-cache');
+
+ ob_end_clean();
+    ob_start();
+        echo "<p>trayendo </p><br>";
+        
+ echo '<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById("txt").innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+ 
+</script>
+
+<body onload="startTime()">
+
+<div id="txt"></div>
+
+<script>
+startTime()
+</script>
+</body>
+
+
+';
+     
+ flush();
+	ob_flush();
+   ob_start();
+        $jsonresponse = file_get_contents("https://alquilerdirecto.com.ar/getPropertyRemote?id=".$request->get("id"));
+        $resonseArray=json_decode($jsonresponse,true);
+           ob_end_flush();
+   flush();
+	ob_flush();
+    sleep(1);
+    echo "sleep";
+        $this->convertIndividualMe($resonseArray);
+       
+
+    }
+    
     
     public function publicateVideos(){
         set_time_limit(0);
